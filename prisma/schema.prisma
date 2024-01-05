@@ -1,0 +1,69 @@
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+type SoilInfo {
+  soilpH        Float    
+  soilType      String
+}
+
+type Location {
+  longitude     String
+  latitude      String
+}
+
+model User {
+  id            String    @id @default(auto()) @map("_id") @db.ObjectId
+  email         String    @unique
+  firstname     String
+  lastname      String
+  username      String    @unique
+  passwordhash  String
+  verified      Boolean   @default(false)
+  farms         Farm[]
+  created_at    DateTime  @default(now())
+  updated_at    DateTime  @updatedAt
+}
+
+model Farm {
+  id            String    @id @default(auto()) @map("_id") @db.ObjectId
+  farmer        User      @relation(fields: [farmerId], references: [id])
+  farmerId      String    @db.ObjectId
+  name          String    
+  location      Location
+  size          Int
+  size_unit     SizeUnit  @default(Plots)
+  status        FarmStatus @default(Planting)
+  soil          SoilInfo
+  tasks         Task[]
+  created_at    DateTime  @default(now())
+  updated_at    DateTime  @updatedAt
+}
+
+model Task {
+  id            String @id @default(auto()) @map("_id")  @db.ObjectId
+  farm          Farm   @relation(fields: [farmId], references: [id])
+  farmId        String @db.ObjectId
+  description   String
+  status        String
+  due_date      DateTime
+  created_at    DateTime  @default(now())
+  updated_at    DateTime  @updatedAt
+}
+
+enum SizeUnit {
+  Plots
+  Acres
+  Hectares
+}
+
+enum FarmStatus {
+  Planting
+  Cultivation
+  Harvesting
+}
