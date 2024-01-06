@@ -10,16 +10,16 @@ import { EjsAdapter } from '@nestjs-modules/mailer/dist/adapters/ejs.adapter';
   imports: [
     MailerModule.forRoot({
       transport: {
-        host: '',
-        port: Number(),
+        host: process.env.EMAIL_HOST,
+        port: Number(process.env.EMAIL_PORT),
         secure: false,
         auth: {
-          user: '',
-          pass: '',
+          user: process.env.EMAIL_USER,
+          pass: process.env.EMAIL_PASS,
         },
       },
       defaults: {
-        from: '',
+        from: process.env.EMAIL_FROM,
       },
       template: {
         dir: '../../templates',

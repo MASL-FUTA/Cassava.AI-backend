@@ -25,6 +25,7 @@ model User {
   username      String    @unique
   passwordhash  String
   verified      Boolean?   @default(false)
+  resetToken    String?
   farms         Farm[]
   created_at    DateTime?  @default(now())
   updated_at    DateTime?  @updatedAt
