@@ -1,5 +1,4 @@
 import {
-  Body,
   Injectable,
   InternalServerErrorException,
   NotFoundException,
@@ -50,7 +49,7 @@ export class AuthService {
   }
 
   @Public()
-  async register(@Body() dto: CreateUserDto) {
+  async register(dto: CreateUserDto) {
     try {
       const passwordhash = await argon.hash(dto.password);
 
@@ -90,9 +89,7 @@ export class AuthService {
   }
 
   @Public()
-  async login(
-    @Body() dto: LoginDto,
-  ): Promise<{ access_token: string } | object> {
+  async login(dto: LoginDto): Promise<{ access_token: string } | object> {
     try {
       const user = await this.prisma.user.findUnique({
         where: {
@@ -139,7 +136,7 @@ export class AuthService {
   }
 
   @Public()
-  async forgotPassword(@Body() dto: ForgotPasswordDto) {
+  async forgotPassword(dto: ForgotPasswordDto) {
     try {
       const user = await this.getUserByEmail(dto.email);
 
