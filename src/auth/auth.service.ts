@@ -7,7 +7,6 @@ import {
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
-import { Public } from 'src/decorators';
 import {
   CreateUserDto,
   LoginDto,
