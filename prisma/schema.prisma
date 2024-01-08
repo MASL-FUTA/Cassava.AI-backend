@@ -39,8 +39,8 @@ model Farm {
   name          String    
   location      Location
   size          Int
-  size_unit     SizeUnit  @default(Plots)
-  status        FarmStatus @default(Planting)
+  size_unit     String  
+  status        String 
   soil          SoilInfo
   tasks         Task[]
   created_at    DateTime?  @default(now())
@@ -59,14 +59,3 @@ model Task {
   updated_at    DateTime?  @updatedAt
 }
 
-enum SizeUnit {
-  Plots
-  Acres
-  Hectares
-}
-
-enum FarmStatus {
-  Planting
-  Cultivation
-  Harvesting
-}

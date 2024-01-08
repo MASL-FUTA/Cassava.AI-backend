@@ -30,6 +30,19 @@ export class TaskService {
         throw new InternalServerErrorException('Task could not be created.');
       }
 
+      await this.prisma.farm.update({
+        where: {
+          id: dto.farmId,
+        },
+        data: {
+          tasks: {
+            connect: {
+              id: newTask.id,
+            },
+          },
+        },
+      });
+
       return {
         message: 'Task created successfully.',
         status: 'success',
@@ -42,7 +55,7 @@ export class TaskService {
     }
   }
 
-  async getAllTasks() {
+  async getAllTasks(userid: string) {
     try {
       const tasks = this.prisma.task.findFirst();
 
