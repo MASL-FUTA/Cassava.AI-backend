@@ -15,19 +15,19 @@ export class EmailService {
     private mailerService: MailerService,
   ) {}
 
-  private async sendVerificationEmail(data: any) {
+  private async sendVerificationEmail(email_data: any) {
     try {
-      const { email, name, token } = data;
+      const { data } = email_data;
 
-      const subject = `Welcome to Farmit!, ${name}`;
+      const subject = `Hi!, ${data.name}`;
 
       await this.mailerService.sendMail({
-        to: email,
+        to: email_data.to,
         subject,
-        template: './welcome-verify',
+        template: './send-verification',
         context: {
-          name,
-          token,
+          name: data.name,
+          token: data.token,
         },
       });
     } catch (error) {
@@ -38,8 +38,35 @@ export class EmailService {
     }
   }
 
-  @OnEvent('verification-email')
+  private async sendWelcomeEmail(email_data: any) {
+    try {
+      const { data } = email_data;
+
+      const subject = `Welcome to Farmit!, ${data.name}`;
+
+      console.log(subject);
+
+      await this.mailerService.sendMail({
+        to: email_data.to,
+        subject,
+        template: './welcome-email',
+        context: {
+          name: data.name,
+        },
+      });
+    } catch (error) {
+      console.error('Welcome Email could not be sent');
+      console.error(error);
+    }
+  }
+
+  @OnEvent('send-verification')
   async handleVerificationEmail(data: any) {
     await this.sendVerificationEmail(data);
+  }
+
+  @OnEvent('welcome-email')
+  async handleWelcomeEmail(data: any) {
+    await this.sendWelcomeEmail(data);
   }
 }

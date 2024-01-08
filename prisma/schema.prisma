@@ -25,6 +25,7 @@ model User {
   username      String    @unique
   passwordhash  String
   verified      Boolean?   @default(false)
+  token         String?
   resetToken    String?
   farms         Farm[]
   created_at    DateTime?  @default(now())
@@ -52,6 +53,7 @@ model Task {
   farmId        String @db.ObjectId
   description   String
   status        String
+  priority      String
   due_date      DateTime
   created_at    DateTime?  @default(now())
   updated_at    DateTime?  @updatedAt

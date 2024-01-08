@@ -22,10 +22,10 @@ import { EjsAdapter } from '@nestjs-modules/mailer/dist/adapters/ejs.adapter';
         from: process.env.EMAIL_FROM,
       },
       template: {
-        dir: '../../templates',
+        dir: './templates',
         adapter: new EjsAdapter(),
         options: {
-          strict: true,
+          strict: false,
         },
       },
     }),

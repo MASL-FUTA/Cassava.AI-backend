@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OTP Verification</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        .container {
+            text-align: center;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            color: #333;
+        }
+
+        strong {
+            color: #e44d26;
+            font-size: 18px;
+        }
+
+        p {
+            color: #555;
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>OTP Verification</h2>
+        <p>Dear <%= name %>,</p>
+        <p>Your One-Time Password (OTP) is: <strong><%= token %></strong></p>
+        <p>Please use this OTP to complete the verification process.</p>
+        <p>This OTP is valid for a short period of time.</p>
+        <br>
+        <p>Thank you!</p>
+    </div>
+</body>
+</html>
