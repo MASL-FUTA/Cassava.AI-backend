@@ -20,7 +20,7 @@ import { RecommendationModule } from './recommendation/recommendation.module';
     JwtModule,
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: '../.env',
+      // envFilePath: '../.env',
     }),
     PrismaModule,
     EmailModule,
