@@ -12,6 +12,7 @@ import { FarmModule } from './farm/farm.module';
 import { APP_GUARD } from '@nestjs/core';
 import { AuthGaurd } from './guards/auth.guard';
 import { ProfileModule } from './profile/profile.module';
+import { RecommendationModule } from './recommendation/recommendation.module';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { ProfileModule } from './profile/profile.module';
     TaskModule,
     FarmModule,
     ProfileModule,
+    RecommendationModule,
   ],
   controllers: [AppController],
   providers: [
