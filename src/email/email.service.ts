@@ -55,8 +55,27 @@ export class EmailService {
         },
       });
     } catch (error) {
-      console.error('Welcome Email could not be sent');
       console.error(error);
+      throw new InternalServerErrorException(
+        'Welcome email could not be sent.',
+      );
+    }
+  }
+
+  private async sendPasswordResetEmail(email_data: any) {
+    try {
+      const { data } = email_data;
+
+      await this.mailerService.sendMail({
+        to: email_data.to,
+        subject: 'Password Reset',
+        template: './password-reset',
+        context: {
+          name: data.name,
+        },
+      });
+    } catch (error) {
+      console.error('Password reset email not sent.');
     }
   }
 

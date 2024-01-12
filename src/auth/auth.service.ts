@@ -93,6 +93,9 @@ export class AuthService {
       };
     } catch (error) {
       console.error(error);
+      if (error.code === 'p2002') {
+        throw new BadRequestException('User already exists');
+      }
       throw new InternalServerErrorException('Registration failed.');
     }
   }
@@ -117,35 +120,6 @@ export class AuthService {
         throw new UnauthorizedException('Invalid password');
       }
 
-      if (!user.verified) {
-        const verificationToken = this.randomDigits();
-        await this.prisma.user.update({
-          where: {
-            email: user.email,
-          },
-          data: {
-            token: verificationToken,
-          },
-        });
-
-        const email_data = {
-          to: user.email,
-          data: {
-            name: user.username,
-            token: verificationToken,
-          },
-        };
-
-        this.emitter.emit('send-verification', email_data);
-
-        return {
-          message: 'Please verify your account',
-          status: 'success',
-          statusCode: 200,
-          data: null,
-        };
-      }
-
       const payload = {
         sub: user.id,
         email: user.email,
@@ -159,6 +133,7 @@ export class AuthService {
         access_token: token,
       };
     } catch (error) {
+      console.error(error);
       throw new UnauthorizedException('Login failed, try again.');
     }
   }
@@ -179,10 +154,14 @@ export class AuthService {
       });
 
       const data = {
-        resetToken,
+        to: user.email,
+        data: {
+          name: user.username,
+          token: resetToken,
+        },
       };
 
-      await this.emitter.emit('send-reset-token', data);
+      this.emitter.emit('send-verification', data);
 
       return {
         message: 'Reset token has been sent to your email',
@@ -203,17 +182,17 @@ export class AuthService {
           email: email,
         },
         select: {
-          token: true,
+          resetToken: true,
         },
       });
+
+      console.log(user.resetToken, token);
 
       if (!user) {
         throw new NotFoundException('User could not be found.');
       }
 
-      const match = token === user.token;
-
-      if (!match) {
+      if (token !== user.resetToken) {
         throw new BadRequestException('Invalid OTP');
       }
 
@@ -230,7 +209,9 @@ export class AuthService {
         message: 'Valid Token',
         status: 'success',
         statusCode: 200,
-        data: null,
+        data: {
+          token: user.resetToken,
+        },
       };
     } catch (error) {
       console.error(error);
@@ -244,16 +225,24 @@ export class AuthService {
 
       const updatedUser = await this.prisma.user.update({
         where: {
-          email: dto.email,
+          resetToken: dto.resetToken,
         },
         data: {
           passwordhash: passwordhash,
+          resetToken: null,
         },
       });
 
       if (!updatedUser) {
         throw new InternalServerErrorException('Password could not be reset');
       }
+
+      this.emitter.emit('password-reset-mail', {
+        to: updatedUser.email,
+        data: {
+          name: updatedUser.username,
+        },
+      });
 
       return {
         message: 'Password Reset successfully.',

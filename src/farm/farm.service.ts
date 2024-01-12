@@ -14,7 +14,11 @@ export class FarmService {
     try {
       const newFarm = await this.prisma.farm.create({
         data: {
-          farmerId: userid,
+          farmer: {
+            connect: {
+              id: userid,
+            },
+          },
           name: dto.name,
           location: dto.location,
           size: dto.size,
@@ -59,6 +63,9 @@ export class FarmService {
         where: {
           farmerId: userid,
         },
+        include: {
+          tasks: true,
+        },
       });
 
       if (!farms) {
@@ -83,6 +90,9 @@ export class FarmService {
         where: {
           farmerId: userid,
           id: farmid,
+        },
+        include: {
+          tasks: true,
         },
       });
 
@@ -132,6 +142,35 @@ export class FarmService {
     } catch (error) {
       console.error(error);
       throw new InternalServerErrorException('Farm could not be updated.');
+    }
+  }
+
+  async getAllTasks(farmid: string) {
+    try {
+      const tasks = await this.prisma.farm.findMany({
+        where: {
+          id: farmid,
+        },
+        select: {
+          tasks: true,
+        },
+      });
+
+      if (!tasks) {
+        throw new NotFoundException('No tasks found for this farm');
+      }
+
+      return {
+        message: 'Tasks retrieved',
+        status: 'success',
+        statusCode: 200,
+        data: tasks,
+      };
+    } catch (error) {
+      console.error(error);
+      throw new InternalServerErrorException(
+        'Tasks for this farm could not be retrieved',
+      );
     }
   }
 

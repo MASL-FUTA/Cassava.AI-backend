@@ -34,6 +34,12 @@ export class FarmController {
     return this.farmService.getById(user.sub, farmid);
   }
 
+  @Get('/:farmid/tasks')
+  @HttpCode(200)
+  getAllTasks(@Param('farmid') farmid: string) {
+    return this.farmService.getAllTasks(farmid);
+  }
+
   @Put('/:farmid')
   @HttpCode(200)
   updateFarm(

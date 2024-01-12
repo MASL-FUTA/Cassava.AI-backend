@@ -11,6 +11,7 @@ import {
 import { User } from 'src/decorators';
 import { TaskService } from './task.service';
 import { CreateTaskDto, UpdateTaskDto } from './dto';
+import { TodoDto } from 'src/farm/dto';
 
 @Controller('tasks')
 export class TaskController {
@@ -24,8 +25,8 @@ export class TaskController {
 
   @Get()
   @HttpCode(200)
-  getAllTasks(@User() user) {
-    return this.taskService.getAllTasks(user.sub);
+  getAllTasks() {
+    return this.taskService.getAllTasks();
   }
 
   @Get('/:taskid')
@@ -38,6 +39,24 @@ export class TaskController {
   @HttpCode(200)
   updateTask(@Param('taskid') taskid: string, @Body() dto: UpdateTaskDto) {
     return this.taskService.updateTask(taskid, dto);
+  }
+
+  @Post('/:taskid/addTodo')
+  @HttpCode(201)
+  addTodo(@Param('taskid') taskid: string, @Body() dto: TodoDto) {
+    return this.taskService.addTodo(taskid, dto);
+  }
+
+  @Put('/updateTodo/:todoid')
+  @HttpCode(200)
+  updateTodo(@Param('todoid') todoid: string, @Body() dto: TodoDto) {
+    return this.taskService.updateTodo(todoid, dto);
+  }
+
+  @Delete('/deleteTodo/:todoid')
+  @HttpCode(200)
+  deleteTodo(@Param('todoid') todoid: string) {
+    return this.taskService.deleteTodo(todoid);
   }
 
   @Delete('/:taskid')

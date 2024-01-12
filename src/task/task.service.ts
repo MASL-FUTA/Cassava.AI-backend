@@ -6,6 +6,7 @@ import {
 import { ConfigService } from '@nestjs/config';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateTaskDto, UpdateTaskDto } from './dto';
+import { TodoDto } from 'src/farm/dto';
 
 @Injectable()
 export class TaskService {
@@ -18,7 +19,11 @@ export class TaskService {
     try {
       const newTask = await this.prisma.task.create({
         data: {
-          farmId: dto.farmId,
+          farm: {
+            connect: {
+              id: dto.farmId,
+            },
+          },
           description: dto.description,
           status: dto.status,
           priority: dto.priority,
@@ -29,19 +34,6 @@ export class TaskService {
       if (!newTask) {
         throw new InternalServerErrorException('Task could not be created.');
       }
-
-      await this.prisma.farm.update({
-        where: {
-          id: dto.farmId,
-        },
-        data: {
-          tasks: {
-            connect: {
-              id: newTask.id,
-            },
-          },
-        },
-      });
 
       return {
         message: 'Task created successfully.',
@@ -55,9 +47,13 @@ export class TaskService {
     }
   }
 
-  async getAllTasks(userid: string) {
+  async getAllTasks() {
     try {
-      const tasks = this.prisma.task.findFirst();
+      const tasks = await this.prisma.task.findMany({
+        include: {
+          todo: true,
+        },
+      });
 
       if (!tasks) {
         throw new InternalServerErrorException('Tasks could not be retrieved.');
@@ -80,6 +76,9 @@ export class TaskService {
       const task = await this.prisma.task.findUnique({
         where: {
           id: taskid,
+        },
+        include: {
+          todo: true,
         },
       });
 
@@ -121,6 +120,81 @@ export class TaskService {
     } catch (error) {
       console.error(error);
       throw new InternalServerErrorException('Task could not be updated.');
+    }
+  }
+
+  async addTodo(taskid: string, dto: TodoDto) {
+    try {
+      const todo = await this.prisma.todo.create({
+        data: {
+          task: {
+            connect: {
+              id: taskid,
+            },
+          },
+          message: dto.message,
+          complete: dto.complete,
+        },
+      });
+
+      if (!todo) {
+        throw new InternalServerErrorException('Todo could not be created');
+      }
+
+      return {
+        message: 'Todo created successfully',
+        status: 'success',
+        statusCode: 200,
+        data: todo,
+      };
+    } catch (error) {
+      console.error(error);
+      throw new InternalServerErrorException('Todo could not be created');
+    }
+  }
+
+  async updateTodo(todoid: string, dto: TodoDto) {
+    try {
+      const todo = await this.prisma.todo.update({
+        where: {
+          id: todoid,
+        },
+        data: dto,
+      });
+
+      if (!todo) {
+        throw new InternalServerErrorException('Todo could not be updated.');
+      }
+
+      return {
+        message: 'Todo has been updated successfully',
+        status: 'success',
+        statusCode: 200,
+        data: todo,
+      };
+    } catch (error) {
+      console.error(error);
+      throw new InternalServerErrorException('Todo could not be updated');
+    }
+  }
+
+  async deleteTodo(todoid: string) {
+    try {
+      await this.prisma.todo.delete({
+        where: {
+          id: todoid,
+        },
+      });
+
+      return {
+        message: 'Todo deleted successfully',
+        status: 'success',
+        statusCode: 200,
+        data: null,
+      };
+    } catch (error) {
+      console.error(error);
+      throw new InternalServerErrorException('Todo could not be deleted');
     }
   }
 

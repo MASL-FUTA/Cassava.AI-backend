@@ -1,4 +1,10 @@
-import { IsDateString, IsIn, IsNotEmpty, IsString } from 'class-validator';
+import {
+  IsArray,
+  IsDateString,
+  IsIn,
+  IsNotEmpty,
+  IsString,
+} from 'class-validator';
 
 export class CreateTaskDto {
   @IsString()
@@ -22,4 +28,7 @@ export class CreateTaskDto {
   @IsString()
   @IsNotEmpty()
   due_date: string;
+
+  @IsArray()
+  todo?: any;
 }

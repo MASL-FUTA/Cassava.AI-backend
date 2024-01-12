@@ -8,13 +8,29 @@ generator client {
 }
 
 type SoilInfo {
-  soilpH        Float    
-  soilType      String
+  pH          Float    
+  texture     String
+  moisture    String
+  drainage    String
+  orgMatter   String
+  compaction  String
+  salinity    String
+  erosion     Boolean
 }
 
 type Location {
+  name          String
   longitude     String
   latitude      String
+}
+
+model Todo {
+  id            String  @id @default(auto()) @map("_id") @db.ObjectId
+  task          Task    @relation(fields: [taskId], references: [id])
+  taskId        String  @db.ObjectId
+  message       String
+  complete      Boolean
+  created_at    DateTime? @default(now())
 }
 
 model User {
@@ -25,8 +41,7 @@ model User {
   username      String    @unique
   passwordhash  String
   verified      Boolean?   @default(false)
-  token         String?
-  resetToken    String?
+  resetToken    String?    @unique
   farms         Farm[]
   created_at    DateTime?  @default(now())
   updated_at    DateTime?  @updatedAt
@@ -41,7 +56,7 @@ model Farm {
   size          Int
   size_unit     String  
   status        String 
-  soil          SoilInfo
+  soil          SoilInfo?
   tasks         Task[]
   created_at    DateTime?  @default(now())
   updated_at    DateTime?  @updatedAt
@@ -49,8 +64,9 @@ model Farm {
 
 model Task {
   id            String @id @default(auto()) @map("_id")  @db.ObjectId
-  farm          Farm   @relation(fields: [farmId], references: [id])
+  farm          Farm?   @relation(fields: [farmId], references: [id])
   farmId        String @db.ObjectId
+  todo          Todo[] 
   description   String
   status        String
   priority      String
