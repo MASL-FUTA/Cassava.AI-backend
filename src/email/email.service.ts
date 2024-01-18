@@ -26,8 +26,8 @@ export class EmailService {
         subject,
         template: './send-verification',
         context: {
-          name: data.name,
-          token: data.token,
+          username: data.name,
+          otp: data.token,
         },
       });
     } catch (error) {
@@ -51,7 +51,7 @@ export class EmailService {
         subject,
         template: './welcome-email',
         context: {
-          name: data.name,
+          username: data.name,
         },
       });
     } catch (error) {
@@ -71,7 +71,7 @@ export class EmailService {
         subject: 'Password Reset',
         template: './password-reset',
         context: {
-          name: data.name,
+          username: data.name,
         },
       });
     } catch (error) {
@@ -87,5 +87,10 @@ export class EmailService {
   @OnEvent('welcome-email')
   async handleWelcomeEmail(data: any) {
     await this.sendWelcomeEmail(data);
+  }
+
+  @OnEvent('password-reset')
+  async handlePasswordResetEmail(data: any) {
+    await this.sendPasswordResetEmail(data);
   }
 }

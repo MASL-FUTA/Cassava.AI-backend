@@ -240,7 +240,7 @@ export class AuthService {
         throw new InternalServerErrorException('Password could not be reset');
       }
 
-      this.emitter.emit('password-reset-mail', {
+      this.emitter.emit('password-reset', {
         to: updatedUser.email,
         data: {
           name: updatedUser.username,
