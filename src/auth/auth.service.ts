@@ -65,6 +65,7 @@ export class AuthService {
           lastname: dto.lastname,
           passwordhash: passwordhash,
           verified: false,
+          deviceTokens: [dto.deviceToken],
         },
         select: {
           email: true,
@@ -75,6 +76,8 @@ export class AuthService {
       if (!newUser) {
         throw new InternalServerErrorException('User could not registered.');
       }
+
+      // await
 
       const email_data = {
         to: dto.email,
