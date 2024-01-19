@@ -76,3 +76,11 @@ model Task {
   updated_at    DateTime?  @updatedAt
 }
 
+model Resource {
+  id            String  @id @default(auto()) @map("_id")  @db.ObjectId
+  title         String
+  body          String
+  img           String
+  url           String
+}
+
