@@ -1,30 +1,87 @@
 import { Injectable } from '@nestjs/common';
-import axios from 'axios';
-import { ConfigService } from '@nestjs/config';
-// import { applicationDefault, initializeApp } from 'firebase-admin/app';
 import { getMessaging } from 'firebase-admin/messaging';
-import { NotificationDto } from './dto/notification.dto';
+import { PrismaService } from 'src/prisma/prisma.service';
+import { Cron } from '@nestjs/schedule';
 
 @Injectable()
 export class NotificationsService {
-  constructor(private readonly config: ConfigService) {}
+  private notificationPayload: any;
+  constructor(private readonly prisma: PrismaService) {}
 
-  async sendPushNotification(
-    deviceToken: any,
-    payload: NotificationDto,
-  ): Promise<void> {
-    const message = {
-      notification: payload,
-      token: deviceToken,
-    };
+  @Cron('0 12 * * * ')
+  fiveDaysCron() {
+    this.sendPushNotification(new Date().getDate() + 5, 5);
+  }
 
-    getMessaging()
-      .send(message)
-      .then((response) => {
-        console.log(response);
-      })
-      .catch((error) => {
-        console.log('Error sending message:', error);
-      });
+  @Cron('0 12 * * *')
+  threeDaysCron() {
+    this.sendPushNotification(new Date().getDate() + 3, 3);
+  }
+
+  @Cron('0 12 * * *')
+  todayCron() {
+    this.sendPushNotification(new Date().getDate());
+  }
+
+  async sendPushNotification(deadline: any, days: number = 0): Promise<void> {
+    const tasks = await this.prisma.task.findMany({
+      where: {
+        due_date: {
+          lte: deadline,
+        },
+      },
+      include: {
+        farm: {
+          select: {
+            farmer: {
+              select: {
+                deviceTokens: true,
+              },
+            },
+          },
+        },
+      },
+    });
+
+    if (tasks.length === 0) {
+      console.log('No tasks with approaching deadlines');
+      return;
+    }
+
+    if (days === 0) {
+      this.notificationPayload = {
+        notification: {
+          title: 'Complete your Tasks',
+          body: `Your tasks are due today, please complete them in time.`,
+        },
+      };
+    } else {
+      this.notificationPayload = {
+        notification: {
+          title: 'Complete your Tasks',
+          body: `Your tasks are due in ${days} days, please complete them in time.`,
+        },
+      };
+    }
+
+    const messaging = getMessaging();
+
+    tasks.forEach(async (task) => {
+      const { farm } = task;
+      const { farmer } = farm;
+
+      if (farmer && farmer.deviceTokens && farmer.deviceTokens.length > 0) {
+        for (const deviceToken of farmer.deviceTokens) {
+          const message = { ...this.notificationPayload, token: deviceToken };
+
+          try {
+            const response = await messaging.send(message);
+            console.log('Notification sent successfully:', response);
+          } catch (error) {
+            console.error('Error sending message: error');
+          }
+        }
+      }
+    });
   }
 }

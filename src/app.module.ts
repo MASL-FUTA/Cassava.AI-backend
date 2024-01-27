@@ -15,6 +15,7 @@ import { ProfileModule } from './profile/profile.module';
 import { RecommendationModule } from './recommendation/recommendation.module';
 import { ResourcesModule } from './resources/resources.module';
 import { NotificationsModule } from './notifications/notifications.module';
+import { ScheduleModule } from '@nestjs/schedule';
 // import * as admin from 'firebase-admin';
 
 // Your web app's Firebase configuration
@@ -41,6 +42,7 @@ import { NotificationsModule } from './notifications/notifications.module';
       isGlobal: true,
       // envFilePath: '../.env',
     }),
+    ScheduleModule.forRoot(),
     PrismaModule,
     EmailModule,
     EventEmitterModule.forRoot(),

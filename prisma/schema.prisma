@@ -64,9 +64,9 @@ model Farm {
 }
 
 model Task {
-  id            String @id @default(auto()) @map("_id")  @db.ObjectId
+  id            String  @id @default(auto()) @map("_id")  @db.ObjectId
   farm          Farm?   @relation(fields: [farmId], references: [id])
-  farmId        String @db.ObjectId
+  farmId        String  @db.ObjectId
   todo          Todo[] 
   description   String
   status        String

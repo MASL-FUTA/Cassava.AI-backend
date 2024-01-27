@@ -14,6 +14,7 @@ import {
   ResetPasswordDto,
 } from './dto';
 import * as argon from 'argon2';
+import { Prisma } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { randomBytes } from 'crypto';
@@ -96,7 +97,12 @@ export class AuthService {
       };
     } catch (error) {
       console.error(error);
-      if (error.code === 'p2002') {
+      if (error instanceof Prisma.PrismaClientKnownRequestError) {
+        if (error.code === 'P2002') {
+          return {
+            message: 'User already exists. Please log in.',
+          };
+        }
         throw new BadRequestException('User already exists');
       }
       throw new InternalServerErrorException('Registration failed.');
