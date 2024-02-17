@@ -1,6 +1,6 @@
 import { Controller, Get } from '@nestjs/common';
 import { RecommendationService } from './recommendation.service';
-import { Public, User } from 'src/decorators';
+import { Public } from 'src/decorators';
 
 @Controller('recommendation')
 export class RecommendationController {
