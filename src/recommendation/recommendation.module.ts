@@ -7,9 +7,6 @@ import { PrismaModule } from 'src/prisma/prisma.module';
 @Module({
   controllers: [RecommendationController],
   providers: [RecommendationService],
-  imports: [
-    ConfigModule,
-    PrismaModule
-  ]
+  imports: [ConfigModule, PrismaModule],
 })
 export class RecommendationModule {}
