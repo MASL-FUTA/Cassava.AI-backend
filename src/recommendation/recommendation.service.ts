@@ -17,7 +17,7 @@ export class RecommendationService {
   ) {}
 
   private async getWeatherData(lat: string, lon: string): Promise<any> {
-    const apiUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${this.config.get<string>(
+    const apiUrl = `http://api.weatherapi.com/v1?q=${lat},${lon}&key=${this.config.get<string>(
       'WEATHER_API_KEY',
     )}`;
 
