@@ -24,5 +24,5 @@ export class CreateUserDto {
 
   @IsString()
   @IsNotEmpty()
-  deviceToken: string;
+  deviceToken?: string;
 }

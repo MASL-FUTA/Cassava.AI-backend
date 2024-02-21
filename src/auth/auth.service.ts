@@ -66,7 +66,6 @@ export class AuthService {
           lastname: dto.lastname,
           passwordhash: passwordhash,
           verified: false,
-          deviceTokens: [dto.deviceToken],
         },
         select: {
           email: true,
