@@ -42,7 +42,7 @@ export class AuthController {
     return this.authService.forgotPassword(dto);
   }
 
-  @Post('/test')
+  @Get('/test')
   @Public()
   async test() {
     return "test"
