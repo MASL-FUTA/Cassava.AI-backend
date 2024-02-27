@@ -11,26 +11,32 @@ import {
 import { FarmService } from './farm.service';
 import { CreateFarmDto, UpdateFarmDto } from './dto';
 import { User } from 'src/decorators';
+import { Roles } from 'src/decorators/role.decorator';
+import { Role } from 'src/common/enums/enum';
+import { UserEntity } from 'src/common/shared/userEntity';
 
 @Controller('farm')
 export class FarmController {
   constructor(private readonly farmService: FarmService) {}
 
   @Post()
+  @Roles(Role.Admin, Role.Farmer)
   @HttpCode(201)
-  createFarm(@User() user, @Body() dto: CreateFarmDto) {
+  createFarm(@User() user: UserEntity, @Body() dto: CreateFarmDto) {
     return this.farmService.createFarm(user.sub, dto);
   }
 
   @Get()
   @HttpCode(200)
-  getAllFarms(@User() user) {
+  @Roles(Role.Admin, Role.Farmer)
+  getAllFarms(@User() user: UserEntity) {
     return this.farmService.getFarms(user.sub);
   }
 
   @Get('/:farmid')
   @HttpCode(200)
-  getFarmById(@User() user, @Param('farmid') farmid: string) {
+  @Roles(Role.Admin, Role.Farmer)
+  getFarmById(@User() user: UserEntity, @Param('farmid') farmid: string) {
     return this.farmService.getById(user.sub, farmid);
   }
 
@@ -42,8 +48,9 @@ export class FarmController {
 
   @Put('/:farmid')
   @HttpCode(200)
+  @Roles(Role.Admin, Role.Farmer)
   updateFarm(
-    @User() user,
+    @User() user: UserEntity,
     @Param('farmid') farmid: string,
     @Body() dto: UpdateFarmDto,
   ) {
@@ -52,7 +59,8 @@ export class FarmController {
 
   @Delete('/:farmid')
   @HttpCode(200)
-  deleteFarm(@User() user, @Param('farmid') farmid: string) {
+  @Roles(Role.Admin, Role.Farmer)
+  deleteFarm(@User() user: UserEntity, @Param('farmid') farmid: string) {
     return this.farmService.deleteFarm(user.sub, farmid);
   }
 }

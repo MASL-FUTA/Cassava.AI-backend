@@ -37,6 +37,11 @@ enum GenericStatus {
   rejected
 }
 
+enum roles {
+  farmer
+  admin
+}
+
 model Todo {
   id         String    @id @default(auto()) @map("_id") @db.ObjectId
   task       Task      @relation(fields: [taskId], references: [id])
@@ -51,7 +56,8 @@ model User {
   email        String    @unique
   firstname    String
   lastname     String
-  username     String    @unique
+  username     String    
+  role         roles     @default(farmer) 
   passwordhash String
   verified     Boolean?  @default(false)
   resetToken   String?   @unique

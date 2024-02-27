@@ -120,6 +120,7 @@ export class AuthService {
           username: true,
           passwordhash: true,
           verified: true,
+          role: true,
         },
       });
 
@@ -131,7 +132,10 @@ export class AuthService {
       const payload = {
         sub: user.id,
         email: user.email,
+        username: user.username,
+        roles: [user.role.toLowerCase],
       };
+
       const token = await this.jwt.signAsync(payload, {
         secret: this.config.get('JWT_SECRET'),
         expiresIn: this.config.get('JWT_EXPIRE'),
