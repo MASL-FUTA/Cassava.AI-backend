@@ -8,79 +8,104 @@ generator client {
 }
 
 type SoilInfo {
-  pH          Float    
-  texture     String
-  moisture    String
-  drainage    String
-  orgMatter   String
-  compaction  String
-  salinity    String
-  erosion     Boolean
+  pH         Float
+  texture    String
+  moisture   String
+  drainage   String
+  orgMatter  String
+  compaction String
+  salinity   String
+  erosion    Boolean
 }
 
 type Location {
-  name          String
-  longitude     String
-  latitude      String
+  name      String
+  longitude String
+  latitude  String
+}
+
+enum inventoryUnit {
+  kg
+  bags
+  tonnes
+}
+
+enum GenericStatus {
+  unlisted
+  pending
+  approved
+  rejected
 }
 
 model Todo {
-  id            String  @id @default(auto()) @map("_id") @db.ObjectId
-  task          Task    @relation(fields: [taskId], references: [id])
-  taskId        String  @db.ObjectId
-  message       String
-  complete      Boolean
-  created_at    DateTime? @default(now())
+  id         String    @id @default(auto()) @map("_id") @db.ObjectId
+  task       Task      @relation(fields: [taskId], references: [id])
+  taskId     String    @db.ObjectId
+  message    String
+  complete   Boolean
+  created_at DateTime? @default(now())
 }
 
 model User {
-  id            String    @id @default(auto()) @map("_id") @db.ObjectId
-  email         String    @unique
-  firstname     String
-  lastname      String
-  username      String    @unique
-  passwordhash  String
-  verified      Boolean?   @default(false)
-  resetToken    String?    @unique
-  deviceTokens  String[]   @unique
-  farms         Farm[]
-  created_at    DateTime?  @default(now())
-  updated_at    DateTime?  @updatedAt
+  id           String    @id @default(auto()) @map("_id") @db.ObjectId
+  email        String    @unique
+  firstname    String
+  lastname     String
+  username     String    @unique
+  passwordhash String
+  verified     Boolean?  @default(false)
+  resetToken   String?   @unique
+  deviceTokens String[]  @unique
+  farms        Farm[]
+  created_at   DateTime? @default(now())
+  updated_at   DateTime? @updatedAt
 }
 
 model Farm {
-  id            String    @id @default(auto()) @map("_id") @db.ObjectId
-  farmer        User      @relation(fields: [farmerId], references: [id])
-  farmerId      String    @db.ObjectId
-  name          String    
-  location      Location
-  size          Int
-  size_unit     String  
-  status        String 
-  soil          SoilInfo?
-  tasks         Task[]
-  created_at    DateTime?  @default(now())
-  updated_at    DateTime?  @updatedAt
+  id         String      @id @default(auto()) @map("_id") @db.ObjectId
+  farmer     User        @relation(fields: [farmerId], references: [id])
+  farmerId   String      @db.ObjectId
+  name       String
+  location   Location
+  size       Int
+  size_unit  String
+  status     String
+  soil       SoilInfo?
+  tasks      Task[]
+  created_at DateTime?   @default(now())
+  updated_at DateTime?   @updatedAt
+  Inventory  Inventory[]
 }
 
 model Task {
-  id            String  @id @default(auto()) @map("_id")  @db.ObjectId
-  farm          Farm?   @relation(fields: [farmId], references: [id])
-  farmId        String  @db.ObjectId
-  todo          Todo[] 
-  description   String
-  status        String
-  priority      String
-  due_date      DateTime
-  created_at    DateTime?  @default(now())
-  updated_at    DateTime?  @updatedAt
+  id          String    @id @default(auto()) @map("_id") @db.ObjectId
+  farm        Farm?     @relation(fields: [farmId], references: [id])
+  farmId      String    @db.ObjectId
+  todo        Todo[]
+  description String
+  status      String
+  priority    String
+  due_date    DateTime
+  created_at  DateTime? @default(now())
+  updated_at  DateTime? @updatedAt
 }
 
 model Resource {
-  id            String  @id @default(auto()) @map("_id")  @db.ObjectId
-  title         String
-  body          String
-  img           String
-  url           String
+  id    String @id @default(auto()) @map("_id") @db.ObjectId
+  title String
+  body  String
+  img   String
+  url   String
 }
 
+model Inventory {
+  id          String        @id @default(auto()) @map("_id") @db.ObjectId
+  farm        Farm          @relation(fields: [farmId], references: [id])
+  farmId      String        @db.ObjectId
+  harvestDate DateTime      @default(now()) @db.Timestamp()
+  quantity    Float
+  type        String
+  unit        inventoryUnit @default(kg)
+  listed      Boolean       @default(false)
+  status      GenericStatus @default(unlisted)
+}

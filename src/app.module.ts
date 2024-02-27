@@ -16,6 +16,7 @@ import { RecommendationModule } from './recommendation/recommendation.module';
 import { ResourcesModule } from './resources/resources.module';
 import { NotificationsModule } from './notifications/notifications.module';
 import { ScheduleModule } from '@nestjs/schedule';
+import { InventoryModule } from './inventory/inventory.module';
 // import * as admin from 'firebase-admin';
 
 // Your web app's Firebase configuration
@@ -52,6 +53,7 @@ import { ScheduleModule } from '@nestjs/schedule';
     RecommendationModule,
     ResourcesModule,
     NotificationsModule,
+    InventoryModule,
   ],
   controllers: [AppController],
   providers: [
