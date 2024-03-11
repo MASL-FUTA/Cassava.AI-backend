@@ -1,0 +1,23 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: CassavaMax
+    environment:
+      - DATABASE_URL="mongodb+srv://xviix:hRQw7peA1ZU8Z32S@cluster0.usrfr.mongodb.net/Farmit?retryWrites=true&w=majority"
+      - JWT_SECRET=8B7EDD958AEBE94E6B9CA7FC53A35
+      - EMAIL_HOST='smtp.googlemail.com'
+      - EMAIL_PORT=587
+      - EMAIL_USER='oladoja14@gmail.com'
+      - EMAIL_PASS='brbnfydcqjrfjyst'
+      - EMAIL_FROM='oladoja14@gmail.com'
+      - JWT_EXPIRE='15m'
+      - GOOGLE_APPLICATION_CREDENTIALS='farmit-d5cc9-firebase-adminsdk-lfuai-219785173d.json'
+      - WEATHER_API_KEY=b9818b2a88dfad9462c02b3d873bf326
+      - OPEN_AI_KEY=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
+      - GEMINI_API_KEY=AIzaSyDn5wrZSbVeO3shbba84bFcVIEgS3JbDps
+    ports:
+      - '3000:3000'
+    volumes:
+      - ./src:app/src
