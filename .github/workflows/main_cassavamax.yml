@@ -23,14 +23,14 @@ jobs:
       uses: docker/login-action@v2
       with:
         registry: https://cassavamax.azurecr.io/
-        username: ${{ secrets.AzureAppService_ContainerUsername_4b31027b3beb4534821a1ae5a13aa68f }}
-        password: ${{ secrets.AzureAppService_ContainerPassword_28f4347210f34ef0829497d83c4084f4 }}
+        username: ${{ secrets.AzureAppService_ContainerUsername_b14b04d2b7d647fead0b8d56302c520d }}
+        password: ${{ secrets.AzureAppService_ContainerPassword_a31cce69a9c840039bff7ae0a974d091 }}
 
     - name: Build and push container image to registry
       uses: docker/build-push-action@v3
       with:
         push: true
-        tags: cassavamax.azurecr.io/${{ secrets.AzureAppService_ContainerUsername_4b31027b3beb4534821a1ae5a13aa68f }}/app:${{ github.sha }}
+        tags: cassavamax.azurecr.io/${{ secrets.AzureAppService_ContainerUsername_b14b04d2b7d647fead0b8d56302c520d }}/app:${{ github.sha }}
         file: ./Dockerfile
 
   deploy:
@@ -47,5 +47,5 @@ jobs:
       with:
         app-name: 'cassavamax'
         slot-name: 'production'
-        publish-profile: ${{ secrets.AzureAppService_PublishProfile_829100d546bb4fb4bbb2270b3a6af3fa }}
-        images: 'cassavamax.azurecr.io/${{ secrets.AzureAppService_ContainerUsername_4b31027b3beb4534821a1ae5a13aa68f }}/app:${{ github.sha }}'
+        publish-profile: ${{ secrets.AzureAppService_PublishProfile_b249a6845f8e47e6b6d2b0f498716fd4 }}
+        images: 'cassavamax.azurecr.io/${{ secrets.AzureAppService_ContainerUsername_b14b04d2b7d647fead0b8d56302c520d }}/app:${{ github.sha }}'
