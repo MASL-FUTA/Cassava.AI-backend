@@ -14,6 +14,6 @@ initializeApp({
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   // app.use();
-  await app.listen(process.env.port || 4000);
+  await app.listen(process.env.port || 1337);
 }
 bootstrap();
