@@ -17,6 +17,8 @@ export class InventoryService {
           },
           harvestDate: dto.harvestDate,
           quantity: dto.quantity,
+          price: dto.price,
+          name: dto.name,
           type: dto.type,
           unit: dto.unit,
         },
@@ -45,11 +47,9 @@ export class InventoryService {
       const items = await this.prisma.inventory.findMany({
         where: {
           farmId: farmId,
-          farm: {
-            farmer: {
-              id: farmerId,
-            },
-          },
+          // farm: {
+          //   farmerId: farmerId,
+          // }
         },
       });
 
@@ -73,15 +73,10 @@ export class InventoryService {
 
   async getInventoryById(id: string, farmerId: string, farmId: string) {
     try {
-      const item = await this.prisma.inventory.findUnique({
+      const item = await this.prisma.inventory.findMany({
         where: {
           id: id,
-          farmId: farmId,
-          farm: {
-            farmer: {
-              id: farmerId,
-            },
-          },
+          // farmId: farmId,
         },
       });
 
@@ -114,11 +109,11 @@ export class InventoryService {
         where: {
           id: id,
           farmId: farmId,
-          farm: {
-            farmer: {
-              id: farmerId,
-            },
-          },
+          // farm: {
+          //   farmer: {
+          //     id: farmerId,
+          //   },
+          // },
         },
         data: dto,
       });

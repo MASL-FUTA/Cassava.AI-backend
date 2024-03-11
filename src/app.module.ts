@@ -17,6 +17,7 @@ import { ResourcesModule } from './resources/resources.module';
 import { NotificationsModule } from './notifications/notifications.module';
 import { ScheduleModule } from '@nestjs/schedule';
 import { InventoryModule } from './inventory/inventory.module';
+import { MarketModule } from './market/market.module';
 // import * as admin from 'firebase-admin';
 
 // Your web app's Firebase configuration
@@ -54,6 +55,7 @@ import { InventoryModule } from './inventory/inventory.module';
     ResourcesModule,
     NotificationsModule,
     InventoryModule,
+    MarketModule,
   ],
   controllers: [AppController],
   providers: [

@@ -106,10 +106,12 @@ model Resource {
 
 model Inventory {
   id          String        @id @default(auto()) @map("_id") @db.ObjectId
+  name        String        
   farm        Farm          @relation(fields: [farmId], references: [id])
   farmId      String        @db.ObjectId
   harvestDate DateTime      @default(now()) @db.Timestamp()
   quantity    Float
+  price       Float
   type        String
   unit        inventoryUnit @default(kg)
   listed      Boolean       @default(false)

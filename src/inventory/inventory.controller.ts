@@ -48,7 +48,7 @@ export class InventoryController {
     );
   }
 
-  @Put('/:farmId/:inventoryId')
+  @Put('/:farmId')
   @HttpCode(200)
   @Roles(Role.Farmer)
   updateInventoryItem(

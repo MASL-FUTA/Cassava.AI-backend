@@ -22,4 +22,11 @@ export class InventoryDto {
   @IsString()
   @IsNotEmpty()
   unit?: any;
+
+  @IsNumber()
+  price: number;
+
+  @IsString()
+  @IsNotEmpty()
+  name: string;
 }
