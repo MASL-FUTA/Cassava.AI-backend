@@ -67,4 +67,5 @@ jobs:
           app-name: 'cassavamax'
           slot-name: 'Production'
           package: .
-          
+      - name: Delete zip file
+        run: rm release.zip
