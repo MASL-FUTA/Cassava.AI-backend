@@ -6,13 +6,18 @@ import { InventoryDto, UpdateInventoryDto } from './dto';
 export class InventoryService {
   constructor(private prisma: PrismaService) {}
 
-  async addToInventory(farmId: string, dto: InventoryDto) {
+  async addToInventory(farmId: string, dto: InventoryDto, farmerId: string) {
     try {
       const item = await this.prisma.inventory.create({
         data: {
           farm: {
             connect: {
               id: farmId,
+            },
+          },
+          farmer: {
+            connect: {
+              id: farmerId,
             },
           },
           harvestDate: dto.harvestDate,
@@ -47,9 +52,7 @@ export class InventoryService {
       const items = await this.prisma.inventory.findMany({
         where: {
           farmId: farmId,
-          // farm: {
-          //   farmerId: farmerId,
-          // }
+          farmerId: farmerId,
         },
       });
 
@@ -71,16 +74,17 @@ export class InventoryService {
     }
   }
 
-  async getInventoryById(id: string, farmerId: string, farmId: string) {
+  async getInventoryById(id: string, farmId: string, farmerId: string) {
     try {
       const item = await this.prisma.inventory.findMany({
         where: {
           id: id,
-          // farmId: farmId,
+          farmId: farmId,
+          farmerId: farmerId,
         },
       });
 
-      if (item) {
+      if (!item) {
         throw new InternalServerErrorException(
           'Harvest could not be retrieved from inventory',
         );
@@ -100,20 +104,16 @@ export class InventoryService {
 
   async updateInventoryItem(
     id: string,
-    farmerId: string,
     farmId: string,
     dto: UpdateInventoryDto,
+    farmerId,
   ) {
     try {
       const item = await this.prisma.inventory.update({
         where: {
           id: id,
           farmId: farmId,
-          // farm: {
-          //   farmer: {
-          //     id: farmerId,
-          //   },
-          // },
+          farmerId: farmerId,
         },
         data: dto,
       });
@@ -142,11 +142,7 @@ export class InventoryService {
         where: {
           id: id,
           farmId: farmId,
-          farm: {
-            farmer: {
-              id: farmerId,
-            },
-          },
+          farmerId: farmerId,
         },
       });
 
@@ -171,11 +167,7 @@ export class InventoryService {
       const items = await this.prisma.inventory.deleteMany({
         where: {
           farmId: farmId,
-          farm: {
-            farmer: {
-              id: farmerId,
-            },
-          },
+          farmerId: farmerId,
         },
       });
 

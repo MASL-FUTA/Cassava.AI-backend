@@ -22,8 +22,12 @@ export class InventoryController {
   @Post('/:farmId/add')
   @HttpCode(201)
   @Roles(Role.Farmer)
-  addToInventory(@Param('farmId') farmId: string, @Body() dto: InventoryDto) {
-    return this.inventoryService.addToInventory(farmId, dto);
+  addToInventory(
+    @Param('farmId') farmId: string,
+    @Body() dto: InventoryDto,
+    @User() user: UserEntity,
+  ) {
+    return this.inventoryService.addToInventory(farmId, dto, user.sub);
   }
 
   @Get('/:farmId')
@@ -43,12 +47,12 @@ export class InventoryController {
   ) {
     return this.inventoryService.getInventoryById(
       inventoryId,
-      user.sub,
       farmId,
+      user.sub,
     );
   }
 
-  @Put('/:farmId')
+  @Put('/:farmId/:inventoryId')
   @HttpCode(200)
   @Roles(Role.Farmer)
   updateInventoryItem(
@@ -59,9 +63,9 @@ export class InventoryController {
   ) {
     return this.inventoryService.updateInventoryItem(
       inventoryId,
-      user.sub,
       farmId,
       dto,
+      user.sub,
     );
   }
 

@@ -52,19 +52,20 @@ model Todo {
 }
 
 model User {
-  id           String    @id @default(auto()) @map("_id") @db.ObjectId
-  email        String    @unique
+  id           String      @id @default(auto()) @map("_id") @db.ObjectId
+  email        String      @unique
   firstname    String
   lastname     String
-  username     String    
-  role         roles     @default(farmer) 
+  username     String
+  role         roles       @default(farmer)
   passwordhash String
-  verified     Boolean?  @default(false)
-  resetToken   String?   @unique
-  deviceTokens String[]  @unique
+  verified     Boolean?    @default(false)
+  resetToken   String?     @unique
+  deviceTokens String[]    @unique
   farms        Farm[]
-  created_at   DateTime? @default(now())
-  updated_at   DateTime? @updatedAt
+  created_at   DateTime?   @default(now())
+  updated_at   DateTime?   @updatedAt
+  Inventory    Inventory[]
 }
 
 model Farm {
@@ -106,7 +107,9 @@ model Resource {
 
 model Inventory {
   id          String        @id @default(auto()) @map("_id") @db.ObjectId
-  name        String        
+  name        String
+  farmer      User          @relation(fields: [farmerId], references: [id])
+  farmerId    String        @db.ObjectId
   farm        Farm          @relation(fields: [farmId], references: [id])
   farmId      String        @db.ObjectId
   harvestDate DateTime      @default(now()) @db.Timestamp()
