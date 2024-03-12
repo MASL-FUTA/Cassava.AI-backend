@@ -18,6 +18,6 @@ services:
       - OPEN_AI_KEY=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
       - GEMINI_API_KEY=AIzaSyDn5wrZSbVeO3shbba84bFcVIEgS3JbDps
     ports:
-      - '3000:3000'
+      - '8080:8080'
     volumes:
       - ./src:app/src
