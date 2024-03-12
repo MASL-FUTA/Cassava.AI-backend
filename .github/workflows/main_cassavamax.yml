@@ -67,6 +67,3 @@ jobs:
           app-name: 'cassavamax'
           slot-name: 'Production'
           package: .
-
-      - name: Run deployment
-          
