@@ -1,7 +1,8 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { initializeApp, applicationDefault } from 'firebase-admin/app';
-import * as process from 'process';
+import * as dotenv from 'dotenv';
+dotenv.config();
 
 process.env.GOOGLE_APPLICATION_CREDENTIALS;
 
