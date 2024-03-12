@@ -2,7 +2,6 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { initializeApp, applicationDefault } from 'firebase-admin/app';
 import * as process from 'process';
-// import * as compression from 'compression';
 
 process.env.GOOGLE_APPLICATION_CREDENTIALS;
 
