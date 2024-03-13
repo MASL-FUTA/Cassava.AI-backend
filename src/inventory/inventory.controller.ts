@@ -8,6 +8,7 @@ import {
   Post,
   Put,
   Query,
+  UseInterceptors,
 } from '@nestjs/common';
 import { InventoryService } from './inventory.service';
 import { Roles } from 'src/decorators/role.decorator';
@@ -15,6 +16,7 @@ import { User } from 'src/decorators';
 import { Role } from 'src/common/enums/enum';
 import { UserEntity } from 'src/common/shared/userEntity';
 import { InventoryDto, UpdateInventoryDto } from './dto';
+import { CacheInterceptor } from '@nestjs/cache-manager';
 
 @Controller('inventory')
 export class InventoryController {
@@ -34,13 +36,19 @@ export class InventoryController {
   @Get('/:farmId')
   @HttpCode(200)
   @Roles(Role.Farmer)
-  getAllInventory(@User() user: UserEntity, @Param('farmId') farmId: string, @Query('page') page: number = 1) {
+  @UseInterceptors(CacheInterceptor)
+  getAllInventory(
+    @User() user: UserEntity,
+    @Param('farmId') farmId: string,
+    @Query('page') page: number = 1,
+  ) {
     return this.inventoryService.getAllInventory(user.sub, farmId, page);
   }
 
   @Get('/:farmId/:inventoryId')
   @HttpCode(200)
   @Roles(Role.Farmer, Role.Admin)
+  @UseInterceptors(CacheInterceptor)
   getInventoryById(
     @User() user: UserEntity,
     @Param('farmId') farmId: string,

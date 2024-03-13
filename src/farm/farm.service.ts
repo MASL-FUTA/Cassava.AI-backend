@@ -173,7 +173,7 @@ export class FarmService {
         status: 'success',
         statusCode: 200,
         data: tasks,
-        page
+        page,
       };
     } catch (error) {
       console.error(error);

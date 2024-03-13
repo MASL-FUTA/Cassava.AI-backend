@@ -19,6 +19,8 @@ import { ScheduleModule } from '@nestjs/schedule';
 import { InventoryModule } from './inventory/inventory.module';
 import { MarketModule } from './market/market.module';
 import { AdminModule } from './admin/admin.module';
+import { CacheModule } from '@nestjs/cache-manager';
+import { ThrottlerModule } from '@nestjs/throttler';
 // import * as admin from 'firebase-admin';
 
 // Your web app's Firebase configuration
@@ -58,6 +60,10 @@ import { AdminModule } from './admin/admin.module';
     InventoryModule,
     MarketModule,
     AdminModule,
+    CacheModule.register({
+      isGlobal: true,
+    }),
+    ThrottlerModule.forRoot(),
   ],
   controllers: [AppController],
   providers: [

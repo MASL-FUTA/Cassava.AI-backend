@@ -8,6 +8,7 @@ import {
   Put,
   Delete,
   Query,
+  UseInterceptors,
 } from '@nestjs/common';
 import { FarmService } from './farm.service';
 import { CreateFarmDto, UpdateFarmDto } from './dto';
@@ -15,6 +16,7 @@ import { User } from 'src/decorators';
 import { Roles } from 'src/decorators/role.decorator';
 import { Role } from 'src/common/enums/enum';
 import { UserEntity } from 'src/common/shared/userEntity';
+import { CacheInterceptor } from '@nestjs/cache-manager';
 
 @Controller('farm')
 export class FarmController {
@@ -29,6 +31,7 @@ export class FarmController {
 
   @Get()
   @HttpCode(200)
+  @UseInterceptors(CacheInterceptor)
   @Roles(Role.Admin, Role.Farmer)
   getAllFarms(@User() user: UserEntity, @Query('page') page: number = 1) {
     return this.farmService.getFarms(user.sub, page);
@@ -36,6 +39,7 @@ export class FarmController {
 
   @Get('/:farmid')
   @HttpCode(200)
+  @UseInterceptors(CacheInterceptor)
   @Roles(Role.Admin, Role.Farmer)
   getFarmById(@User() user: UserEntity, @Param('farmid') farmid: string) {
     return this.farmService.getById(user.sub, farmid);
@@ -43,7 +47,10 @@ export class FarmController {
 
   @Get('/:farmid/tasks')
   @HttpCode(200)
-  getAllTasks(@Param('farmid') farmid: string, @Query('page') page: number = 1) {
+  getAllTasks(
+    @Param('farmid') farmid: string,
+    @Query('page') page: number = 1,
+  ) {
     return this.farmService.getAllTasks(farmid, page);
   }
 
