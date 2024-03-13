@@ -59,7 +59,7 @@ export class FarmService {
     }
   }
 
-  async getFarms(userid: string) {
+  async getFarms(userid: string, page: number) {
     try {
       const farms = await this.prisma.farm.findMany({
         where: {
@@ -68,6 +68,8 @@ export class FarmService {
         include: {
           tasks: true,
         },
+        take: 10,
+        skip: (page - 1) * 10,
       });
 
       if (!farms) {
@@ -79,6 +81,7 @@ export class FarmService {
         status: 'success',
         statusCode: 200,
         data: farms,
+        page,
       };
     } catch (error) {
       console.error(error);
@@ -147,7 +150,7 @@ export class FarmService {
     }
   }
 
-  async getAllTasks(farmid: string) {
+  async getAllTasks(farmid: string, page: number) {
     try {
       const tasks = await this.prisma.farm.findMany({
         where: {
@@ -156,6 +159,9 @@ export class FarmService {
         select: {
           tasks: true,
         },
+
+        take: 10,
+        skip: (page - 1) * 10,
       });
 
       if (!tasks) {
@@ -167,6 +173,7 @@ export class FarmService {
         status: 'success',
         statusCode: 200,
         data: tasks,
+        page
       };
     } catch (error) {
       console.error(error);

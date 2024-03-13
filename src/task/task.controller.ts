@@ -7,8 +7,8 @@ import {
   Param,
   Put,
   Delete,
+  Query,
 } from '@nestjs/common';
-import { User } from 'src/decorators';
 import { TaskService } from './task.service';
 import { CreateTaskDto, UpdateTaskDto } from './dto';
 import { TodoDto } from 'src/farm/dto';
@@ -25,8 +25,8 @@ export class TaskController {
 
   @Get()
   @HttpCode(200)
-  getAllTasks() {
-    return this.taskService.getAllTasks();
+  getAllTasks(@Query('page') page: number = 1) {
+    return this.taskService.getAllTasks(page);
   }
 
   @Get('/:taskid')

@@ -47,13 +47,15 @@ export class InventoryService {
     }
   }
 
-  async getAllInventory(farmerId: string, farmId: string) {
+  async getAllInventory(farmerId: string, farmId: string, page: number) {
     try {
       const items = await this.prisma.inventory.findMany({
         where: {
           farmId: farmId,
           farmerId: farmerId,
         },
+        take: 10,
+        skip: (page - 1) * 10,
       });
 
       if (!items) {

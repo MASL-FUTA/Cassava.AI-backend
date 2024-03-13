@@ -7,6 +7,7 @@ import {
   Param,
   Put,
   Delete,
+  Query,
 } from '@nestjs/common';
 import { FarmService } from './farm.service';
 import { CreateFarmDto, UpdateFarmDto } from './dto';
@@ -29,8 +30,8 @@ export class FarmController {
   @Get()
   @HttpCode(200)
   @Roles(Role.Admin, Role.Farmer)
-  getAllFarms(@User() user: UserEntity) {
-    return this.farmService.getFarms(user.sub);
+  getAllFarms(@User() user: UserEntity, @Query('page') page: number = 1) {
+    return this.farmService.getFarms(user.sub, page);
   }
 
   @Get('/:farmid')
@@ -42,8 +43,8 @@ export class FarmController {
 
   @Get('/:farmid/tasks')
   @HttpCode(200)
-  getAllTasks(@Param('farmid') farmid: string) {
-    return this.farmService.getAllTasks(farmid);
+  getAllTasks(@Param('farmid') farmid: string, @Query('page') page: number = 1) {
+    return this.farmService.getAllTasks(farmid, page);
   }
 
   @Put('/:farmid')

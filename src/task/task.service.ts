@@ -47,12 +47,14 @@ export class TaskService {
     }
   }
 
-  async getAllTasks() {
+  async getAllTasks(page: number) {
     try {
       const tasks = await this.prisma.task.findMany({
         include: {
           todo: true,
         },
+        take: 10,
+        skip: (page - 1) * 10,
       });
 
       if (!tasks) {

@@ -7,6 +7,7 @@ import {
   Param,
   Post,
   Put,
+  Query,
 } from '@nestjs/common';
 import { InventoryService } from './inventory.service';
 import { Roles } from 'src/decorators/role.decorator';
@@ -33,8 +34,8 @@ export class InventoryController {
   @Get('/:farmId')
   @HttpCode(200)
   @Roles(Role.Farmer)
-  getAllInventory(@User() user: UserEntity, @Param('farmId') farmId: string) {
-    return this.inventoryService.getAllInventory(user.sub, farmId);
+  getAllInventory(@User() user: UserEntity, @Param('farmId') farmId: string, @Query('page') page: number = 1) {
+    return this.inventoryService.getAllInventory(user.sub, farmId, page);
   }
 
   @Get('/:farmId/:inventoryId')
