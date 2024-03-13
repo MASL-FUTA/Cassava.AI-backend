@@ -20,6 +20,6 @@ async function bootstrap() {
   app.use(helmet());
   app.enableCors();
   app.useGlobalPipes(new ValidationPipe());
-  await app.listen(process.env.port || 3000);
+  await app.listen(process.env.port || 8080);
 }
 bootstrap();
