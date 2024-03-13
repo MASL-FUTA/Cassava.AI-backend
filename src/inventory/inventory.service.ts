@@ -136,6 +136,66 @@ export class InventoryService {
     }
   }
 
+  async addToMarket(id: string, farmId: string) {
+    try {
+      const item = await this.prisma.inventory.update({
+        where: {
+          id: id,
+          farmId: farmId,
+        },
+        data: {
+          listed: true,
+          status: 'pending',
+        },
+      });
+
+      if (!item) {
+        throw new InternalServerErrorException(
+          'Inventory item could not be retrieved.',
+        );
+      }
+
+      return {
+        message: 'Item has been added to market',
+        status: 'success',
+        statusCode: 200,
+        data: item,
+      };
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async removeFromMarket(id: string, farmId: string) {
+    try {
+      const item = await this.prisma.inventory.update({
+        where: {
+          id: id,
+          farmId: farmId,
+        },
+        data: {
+          listed: false,
+          status: 'unlisted',
+        },
+      });
+
+      if (!item) {
+        throw new InternalServerErrorException(
+          'Item could not be removed from market.',
+        );
+      }
+
+      return {
+        message: 'Item has been added to market',
+        status: 'success',
+        statusCode: 200,
+        data: item,
+      };
+    } catch (error) {
+      throw error;
+    }
+  }
+
   async deleteInventoryItem(id: string, farmerId: string, farmId: string) {
     try {
       const item = await this.prisma.inventory.delete({

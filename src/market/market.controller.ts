@@ -16,7 +16,7 @@ export class MarketController {
   @Get()
   @HttpCode(200)
   @Public()
-  getMarketItems(@Query('page', ParseIntPipe) page?: number) {
+  getMarketItems(@Query('page') page: number = 1) {
     return this.marketService.getMarketItems(page);
   }
 
@@ -27,10 +27,10 @@ export class MarketController {
     return this.marketService.getMarketItem(id);
   }
 
-  @Get('/:id/sellerinfo')
+  @Get('/:farmid/:id/sellerinfo')
   @HttpCode(200)
   @Public()
-  getSellerInfo(@Param('id') id: string) {
-    return this.marketService.getSellerDetails(id);
+  getSellerInfo(@Param('id') id: string, @Param('farmid') farmId: string) {
+    return this.marketService.getSeller(id, farmId);
   }
 }

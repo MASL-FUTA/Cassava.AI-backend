@@ -22,6 +22,11 @@ export class MarketService {
               name: true,
             },
           },
+          farmer: {
+            select: {
+              username: true,
+            },
+          },
           quantity: true,
           price: true,
           harvestDate: true,
@@ -87,29 +92,18 @@ export class MarketService {
     }
   }
 
-  // async contactSeller(dto: ContactDto) {
-  //   try {
-
-  //   } catch (error) {
-
-  //   }
-  // }
-
-  async getSellerDetails(itemid: string) {
+  async getSeller(inventoryId: string, farmId: string) {
     try {
-      const seller = await this.prisma.inventory.findUnique({
+      const seller = await this.prisma.inventory.findFirst({
         where: {
-          id: itemid,
+          farmId: farmId,
+          id: inventoryId,
         },
         select: {
-          farm: {
+          farmer: {
             select: {
-              farmer: {
-                select: {
-                  username: true,
-                  email: true,
-                },
-              },
+              username: true,
+              email: true,
             },
           },
         },
@@ -117,18 +111,81 @@ export class MarketService {
 
       if (!seller) {
         throw new InternalServerErrorException(
-          'Seller Information could not be retrieved',
+          'Seller Info could not be retrieved',
         );
       }
 
       return {
-        message: 'Seller info retrieved',
+        message: 'Seller Info Retrieved successfully',
         status: 'success',
         statusCode: 200,
         data: seller,
       };
     } catch (error) {
-      console.error(error);
+      throw error;
+    }
+  }
+
+  // async getSellerDetails(itemid: string) {
+  //   try {
+  //     const seller = await this.prisma.inventory.findUnique({
+  //       where: {
+  //         id: itemid,
+  //       },
+  //       select: {
+  //         farm: {
+  //           select: {
+  //             farmer: {
+  //               select: {
+  //                 username: true,
+  //                 email: true,
+  //               },
+  //             },
+  //           },
+  //         },
+  //       },
+  //     });
+
+  //     if (!seller) {
+  //       throw new InternalServerErrorException(
+  //         'Seller Information could not be retrieved',
+  //       );
+  //     }
+
+  //     return {
+  //       message: 'Seller info retrieved',
+  //       status: 'success',
+  //       statusCode: 200,
+  //       data: seller,
+  //     };
+  //   } catch (error) {
+  //     console.error(error);
+  //     throw error;
+  //   }
+  // }
+
+  async approveItem(inventoryId: string) {
+    try {
+      const item = await this.prisma.inventory.update({
+        where: {
+          id: inventoryId,
+        },
+        data: {
+          status: 'approved',
+        },
+      });
+
+      if (!item) {
+        throw new InternalServerErrorException('Item could not be approved');
+      }
+
+      return {
+        message: 'Item approved',
+        status: 'success',
+        statusCode: 200,
+        data: item,
+      };
+    } catch (error) {
       throw error;
     }
   }

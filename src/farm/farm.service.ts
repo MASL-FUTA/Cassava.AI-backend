@@ -5,18 +5,19 @@ import {
 } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateFarmDto, UpdateFarmDto } from './dto';
+import { UserEntity } from 'src/common/shared/userEntity';
 
 @Injectable()
 export class FarmService {
   constructor(private prisma: PrismaService) {}
 
-  async createFarm(userid: string, dto: CreateFarmDto) {
+  async createFarm(user: UserEntity, dto: CreateFarmDto) {
     try {
       const newFarm = await this.prisma.farm.create({
         data: {
           farmer: {
             connect: {
-              id: userid,
+              id: user.sub,
             },
           },
           name: dto.name,
@@ -34,7 +35,7 @@ export class FarmService {
 
       await this.prisma.user.update({
         where: {
-          id: userid,
+          id: user.sub,
         },
         data: {
           farms: {
@@ -42,6 +43,7 @@ export class FarmService {
               id: newFarm.id,
             },
           },
+          role: 'farmer',
         },
       });
 

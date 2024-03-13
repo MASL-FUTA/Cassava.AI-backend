@@ -39,6 +39,7 @@ enum GenericStatus {
 
 enum roles {
   farmer
+  user
   admin
 }
 
@@ -57,7 +58,8 @@ model User {
   firstname    String
   lastname     String
   username     String
-  role         roles       @default(farmer)
+  phone_number String
+  role         roles       @default(user)
   passwordhash String
   verified     Boolean?    @default(false)
   resetToken   String?     @unique

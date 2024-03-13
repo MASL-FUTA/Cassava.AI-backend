@@ -65,6 +65,7 @@ export class AuthService {
           firstname: dto.firstname,
           lastname: dto.lastname,
           passwordhash: passwordhash,
+          phone_number: dto.phone_number,
           verified: false,
         },
         select: {

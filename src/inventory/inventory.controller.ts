@@ -69,6 +69,26 @@ export class InventoryController {
     );
   }
 
+  @Get('/:farmid/:inventoryid/add-to-market')
+  @HttpCode(200)
+  @Roles(Role.Farmer, Role.Admin)
+  addToMarket(
+    @Param('farmid') farmid: string,
+    @Param('inventoryid') inventoryId: string,
+  ) {
+    return this.inventoryService.addToMarket(inventoryId, farmid);
+  }
+
+  @Get('/:farmid/:inventoryid/remove-from-market')
+  @HttpCode(200)
+  @Roles(Role.Admin, Role.Farmer)
+  removeFromMarket(
+    @Param('farmid') farmId: string,
+    @Param('inventoryid') inventoryId: string,
+  ) {
+    return this.inventoryService.removeFromMarket(inventoryId, farmId);
+  }
+
   @Delete('/:farmId/:inventoryId')
   @HttpCode(200)
   @Roles(Role.Farmer)

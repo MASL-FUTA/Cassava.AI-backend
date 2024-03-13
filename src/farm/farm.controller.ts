@@ -23,7 +23,7 @@ export class FarmController {
   @Roles(Role.Admin, Role.Farmer)
   @HttpCode(201)
   createFarm(@User() user: UserEntity, @Body() dto: CreateFarmDto) {
-    return this.farmService.createFarm(user.sub, dto);
+    return this.farmService.createFarm(user, dto);
   }
 
   @Get()

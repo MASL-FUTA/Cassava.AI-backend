@@ -20,8 +20,13 @@ export class ProfileService {
           email: user_email,
         },
         select: {
+          email: true,
+          phone_number: true,
           username: true,
+          firstname: true,
+          lastname: true,
           farms: true,
+          Inventory: true,
         },
       });
 
