@@ -200,11 +200,15 @@ export class TaskService {
 
   async deleteTask(taskid: string) {
     try {
-      await this.prisma.task.delete({
+      const task = await this.prisma.task.delete({
         where: {
           id: taskid,
         },
       });
+
+      if (!task) {
+        throw new InternalServerErrorException('Task could not be deleted');
+      }
 
       return {
         message: 'Task deleted successfully.',
@@ -214,7 +218,7 @@ export class TaskService {
       };
     } catch (error) {
       console.error(error);
-      throw new InternalServerErrorException('Task could not be deleted.');
+      throw error;
     }
   }
 }

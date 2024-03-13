@@ -189,4 +189,48 @@ export class MarketService {
       throw error;
     }
   }
+
+  async search(term: string, page?: number) {
+    try {
+      const search = await this.prisma.inventory.findMany({
+        where: {
+          OR: [
+            {
+              name: {
+                contains: term,
+              },
+            },
+            {
+              farmer: {
+                username: {
+                  contains: term,
+                },
+              },
+            },
+            {
+              type: {
+                contains: term,
+              },
+            },
+          ],
+        },
+        take: 10,
+        skip: (page - 1) * 10,
+      });
+
+      if (!search) {
+        throw new InternalServerErrorException('No item found');
+      }
+
+      return {
+        message: 'Item found',
+        status: 'success',
+        statusCode: 200,
+        data: search,
+        page,
+      };
+    } catch (error) {
+      throw error;
+    }
+  }
 }
