@@ -25,6 +25,8 @@ export class MarketService {
           farmer: {
             select: {
               username: true,
+              email: true,
+              phone_number: true,
             },
           },
           quantity: true,
@@ -104,6 +106,7 @@ export class MarketService {
             select: {
               username: true,
               email: true,
+              phone_number: true,
             },
           },
         },
