@@ -59,7 +59,7 @@ model User {
   lastname          String
   username          String
   phone_number      String
-  role              roles       @default(user)
+  role              roles       @default(farmer)
   passwordhash      String
   verified          Boolean?    @default(false)
   verificationToken String?
