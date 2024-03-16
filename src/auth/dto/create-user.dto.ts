@@ -28,9 +28,9 @@ export class CreateUserDto {
   @IsNotEmpty()
   username: string;
 
-  @IsString()
-  @IsNotEmpty()
-  deviceToken?: string;
+  // @IsString()
+  // @IsNotEmpty()
+  // deviceToken?: string;
 
   @IsString()
   @IsPhoneNumber()
