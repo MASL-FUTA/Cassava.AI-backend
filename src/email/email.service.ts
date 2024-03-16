@@ -27,7 +27,7 @@ export class EmailService {
         template: './send-verification',
         context: {
           username: data.name,
-          otp: data.token,
+          token: data.token,
         },
       });
     } catch (error) {

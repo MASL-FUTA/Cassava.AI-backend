@@ -27,11 +27,11 @@
 name: Build and deploy a container to an Azure Web App
 
 env:
-  AZURE_WEBAPP_NAME: cassavamax  # set this to the name of your Azure Web App
+  AZURE_WEBAPP_NAME: cassavamax # set this to the name of your Azure Web App
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ['main']
   workflow_dispatch:
 
 permissions:

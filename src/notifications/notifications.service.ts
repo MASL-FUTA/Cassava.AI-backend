@@ -42,12 +42,10 @@ export class NotificationsService {
     //     },
     //   },
     // });
-
     // if (tasks.length === 0) {
     //   console.log('No tasks with approaching deadlines');
     //   return;
     // }
-
     // if (days === 0) {
     //   this.notificationPayload = {
     //     notification: {
@@ -63,17 +61,13 @@ export class NotificationsService {
     //     },
     //   };
     // }
-
     // const messaging = getMessaging();
-
     // tasks.forEach(async (task) => {
     //   const { farm } = task;
     //   const { farmer } = farm;
-
     //   if (farmer && farmer.deviceTokens && farmer.deviceTokens.length > 0) {
     //     for (const deviceToken of farmer.deviceTokens) {
     //       const message = { ...this.notificationPayload, token: deviceToken };
-
     //       try {
     //         const response = await messaging.send(message);
     //         console.log('Notification sent successfully:', response);
