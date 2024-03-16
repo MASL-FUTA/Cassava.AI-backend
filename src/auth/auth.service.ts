@@ -57,6 +57,7 @@ export class AuthService {
   async register(dto: CreateUserDto) {
     try {
       const passwordhash = await argon.hash(dto.password);
+      const verificationToken = this.randomDigits();
 
       const newUser = await this.prisma.user.create({
         data: {
@@ -67,6 +68,7 @@ export class AuthService {
           passwordhash: passwordhash,
           phone_number: dto.phone_number,
           verified: false,
+          verificationToken: verificationToken,
         },
         select: {
           email: true,
@@ -84,10 +86,12 @@ export class AuthService {
         to: dto.email,
         data: {
           name: dto.username,
+          token: verificationToken,
         },
       };
 
       this.emitter.emit('welcome-email', email_data);
+      this.emitter.emit('send-verification', email_data);
 
       return {
         message: 'User registered.',

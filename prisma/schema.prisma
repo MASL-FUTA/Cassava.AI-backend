@@ -53,21 +53,22 @@ model Todo {
 }
 
 model User {
-  id           String      @id @default(auto()) @map("_id") @db.ObjectId
-  email        String      @unique
-  firstname    String
-  lastname     String
-  username     String
-  phone_number String
-  role         roles       @default(user)
-  passwordhash String
-  verified     Boolean?    @default(false)
-  resetToken   String?     @unique
+  id                String      @id @default(auto()) @map("_id") @db.ObjectId
+  email             String      @unique
+  firstname         String
+  lastname          String
+  username          String
+  phone_number      String
+  role              roles       @default(user)
+  passwordhash      String
+  verified          Boolean?    @default(false)
+  verificationToken String?
+  resetToken        String?     @unique
   // deviceTokens String[]    @unique
-  farms        Farm[]
-  created_at   DateTime?   @default(now())
-  updated_at   DateTime?   @updatedAt
-  Inventory    Inventory[]
+  farms             Farm[]
+  created_at        DateTime?   @default(now())
+  updated_at        DateTime?   @updatedAt
+  Inventory         Inventory[]
 }
 
 model Farm {
