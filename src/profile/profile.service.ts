@@ -47,4 +47,28 @@ export class ProfileService {
       );
     }
   }
+
+  async deleteAccount(user_id: string) {
+    try {
+      const user = await this.prisma.user.delete({
+        where: {
+          id: user_id,
+        },
+      });
+
+      if (!user) {
+        throw new InternalServerErrorException('User could not be deleted');
+      }
+
+      return {
+        message: 'Account deleted successfully',
+        status: 'success',
+        statusCode: 200,
+        data: null,
+      };
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  }
 }

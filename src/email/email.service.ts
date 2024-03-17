@@ -42,7 +42,7 @@ export class EmailService {
     try {
       const { data } = email_data;
 
-      const subject = `Welcome to Farmit!, ${data.name}`;
+      const subject = `Welcome to CassavaMax!, ${data.name}`;
 
       console.log(subject);
 

@@ -80,8 +80,6 @@ export class AuthService {
         throw new InternalServerErrorException('User could not registered.');
       }
 
-      // await
-
       const email_data = {
         to: dto.email,
         data: {
@@ -193,7 +191,6 @@ export class AuthService {
   }
 
   async verifyToken(email: string, token: string) {
-    console.log('VerifyToken');
     try {
       const user = await this.prisma.user.findUnique({
         where: {
@@ -204,8 +201,6 @@ export class AuthService {
           verificationToken: true,
         },
       });
-
-      // console.log(user.verificationToken, token);
 
       if (!user) {
         throw new NotFoundException('User could not be found.');
