@@ -127,6 +127,34 @@ export class AuthService {
         },
       });
 
+      if (!user.verified) {
+        const verificationToken = this.randomDigits();
+        await this.prisma.user.update({
+          where: {
+            id: user.id,
+          },
+          data: {
+            verificationToken: verificationToken,
+          },
+        });
+
+        const email_data = {
+          to: dto.email,
+          data: {
+            name: user.username,
+            token: verificationToken,
+          },
+        };
+
+        this.emitter.emit('send-verification', email_data);
+
+        return {
+          message: 'Please verify your account',
+          status: 'success',
+          statusCode: 200,
+        };
+      }
+
       const match = await argon.verify(user.passwordhash, dto.password);
       if (!match) {
         throw new UnauthorizedException('Invalid password');
@@ -216,6 +244,7 @@ export class AuthService {
         },
         data: {
           verified: true,
+          verificationToken: undefined,
         },
       });
 
