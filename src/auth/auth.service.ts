@@ -200,6 +200,7 @@ export class AuthService {
         },
         select: {
           resetToken: true,
+          verificationToken: true,
         },
       });
 
@@ -209,7 +210,7 @@ export class AuthService {
         throw new NotFoundException('User could not be found.');
       }
 
-      if (token !== user.resetToken) {
+      if (token !== user.resetToken && token !== user.verificationToken) {
         throw new BadRequestException('Invalid OTP');
       }
 
@@ -226,9 +227,6 @@ export class AuthService {
         message: 'Valid Token',
         status: 'success',
         statusCode: 200,
-        data: {
-          token: user.resetToken,
-        },
       };
     } catch (error) {
       console.error(error);
