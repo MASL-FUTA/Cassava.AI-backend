@@ -5,6 +5,7 @@ import {
   ForgotPasswordDto,
   LoginDto,
   ResetPasswordDto,
+  VerifyTokenDto,
 } from './dto';
 import { Public } from 'src/decorators';
 
@@ -32,7 +33,8 @@ export class AuthController {
 
   @Post('/verifyToken')
   @Public()
-  async verifyToken(@Body() dto) {
+  async verifyToken(@Body() dto: VerifyTokenDto) {
+    console.log('verifytoken');
     return this.authService.verifyToken(dto.email, dto.token);
   }
 

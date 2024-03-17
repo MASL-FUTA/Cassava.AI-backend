@@ -193,6 +193,7 @@ export class AuthService {
   }
 
   async verifyToken(email: string, token: string) {
+    console.log('VerifyToken');
     try {
       const user = await this.prisma.user.findUnique({
         where: {
@@ -204,7 +205,7 @@ export class AuthService {
         },
       });
 
-      console.log(user.resetToken, token);
+      // console.log(user.verificationToken, token);
 
       if (!user) {
         throw new NotFoundException('User could not be found.');
@@ -230,7 +231,7 @@ export class AuthService {
       };
     } catch (error) {
       console.error(error);
-      throw new InternalServerErrorException('Token could not be verified.');
+      throw error;
     }
   }
 
