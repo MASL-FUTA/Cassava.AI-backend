@@ -4,39 +4,104 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { CreateMarketDto } from './dto/createMarket.dto';
 
 @Injectable()
 export class MarketService {
   constructor(private prisma: PrismaService) {}
 
-  async getMarketItems(page: number = 1) {
+  async addToMarket(dto: CreateMarketDto) {
     try {
-      const items = await this.prisma.inventory.findMany({
-        where: {
-          listed: true,
+      const market = await this.prisma.market.create({
+        data: {
+          name: dto.name,
+          username: dto.username,
+          email: dto.email,
+          price: dto.price,
+          phoneNumber: dto.phoneNumber,
+          type: dto.type,
+          unit: dto.unit,
+          harvestDate: dto.harvestDate,
+          quantity: dto.quantity,
         },
-        select: {
-          name: true,
-          farm: {
-            select: {
-              name: true,
-            },
-          },
-          farmer: {
-            select: {
-              username: true,
-              email: true,
-              phone_number: true,
-            },
-          },
-          quantity: true,
-          price: true,
-          harvestDate: true,
-          type: true,
-          unit: true,
-        },
-        take: 10,
+      });
+
+      if (!market) {
+        throw new InternalServerErrorException('Could not be added to market');
+      }
+
+      return {
+        message: 'Produce added to Market',
+        status: 'success',
+        statusCode: 200,
+        data: market,
+      };
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  }
+
+  async getAllMarketItems(page: number = 1) {
+    try {
+      const items = await this.prisma.market.findMany({
         skip: (page - 1) * 10,
+        take: 10,
+      });
+
+      if (!items) {
+        throw new InternalServerErrorException('Items could not be retrieved');
+      }
+
+      return {
+        message: 'Items retrieved',
+        status: 'success',
+        statusCode: 200,
+        data: items,
+        page,
+      };
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  }
+
+  async getApprovedMarketItems(page: number = 1) {
+    try {
+      // const items = await this.prisma.inventory.findMany({
+      //   where: {
+      //     listed: true,
+      //   },
+      //   select: {
+      //     name: true,
+      //     farm: {
+      //       select: {
+      //         name: true,
+      //       },
+      //     },
+      //     farmer: {
+      //       select: {
+      //         username: true,
+      //         email: true,
+      //         phone_number: true,
+      //       },
+      //     },
+      //     quantity: true,
+      //     price: true,
+      //     harvestDate: true,
+      //     type: true,
+      //     unit: true,
+      //   },
+      //   take: 10,
+      //   skip: (page - 1) * 10,
+      // });
+
+      const items = await this.prisma.market.findMany({
+        where: {
+          status: 'approved',
+        },
+        skip: (page - 1) * 10,
+        take: 10,
       });
 
       if (!items) {
@@ -58,18 +123,16 @@ export class MarketService {
 
   async getMarketItem(itemid: string) {
     try {
-      const item = await this.prisma.inventory.findUnique({
+      const item = await this.prisma.market.findUnique({
         where: {
           id: itemid,
           listed: true,
         },
         select: {
           name: true,
-          farm: {
-            select: {
-              name: true,
-            },
-          },
+          username: true,
+          email: true,
+          phoneNumber: true,
           quantity: true,
           price: true,
           harvestDate: true,
@@ -94,21 +157,16 @@ export class MarketService {
     }
   }
 
-  async getSeller(inventoryId: string, farmId: string) {
+  async getSeller(itemid: string) {
     try {
-      const seller = await this.prisma.inventory.findFirst({
+      const seller = await this.prisma.market.findFirst({
         where: {
-          farmId: farmId,
-          id: inventoryId,
+          id: itemid,
         },
         select: {
-          farmer: {
-            select: {
-              username: true,
-              email: true,
-              phone_number: true,
-            },
-          },
+          username: true,
+          email: true,
+          phoneNumber: true,
         },
       });
 
@@ -129,52 +187,15 @@ export class MarketService {
     }
   }
 
-  // async getSellerDetails(itemid: string) {
-  //   try {
-  //     const seller = await this.prisma.inventory.findUnique({
-  //       where: {
-  //         id: itemid,
-  //       },
-  //       select: {
-  //         farm: {
-  //           select: {
-  //             farmer: {
-  //               select: {
-  //                 username: true,
-  //                 email: true,
-  //               },
-  //             },
-  //           },
-  //         },
-  //       },
-  //     });
-
-  //     if (!seller) {
-  //       throw new InternalServerErrorException(
-  //         'Seller Information could not be retrieved',
-  //       );
-  //     }
-
-  //     return {
-  //       message: 'Seller info retrieved',
-  //       status: 'success',
-  //       statusCode: 200,
-  //       data: seller,
-  //     };
-  //   } catch (error) {
-  //     console.error(error);
-  //     throw error;
-  //   }
-  // }
-
-  async approveItem(inventoryId: string) {
+  async approveItem(itemid: string) {
     try {
-      const item = await this.prisma.inventory.update({
+      const item = await this.prisma.market.update({
         where: {
-          id: inventoryId,
+          id: itemid,
         },
         data: {
           status: 'approved',
+          listed: true,
         },
       });
 
@@ -195,7 +216,7 @@ export class MarketService {
 
   async search(term: string, page?: number) {
     try {
-      const search = await this.prisma.inventory.findMany({
+      const search = await this.prisma.market.findMany({
         where: {
           OR: [
             {
@@ -204,10 +225,8 @@ export class MarketService {
               },
             },
             {
-              farmer: {
-                username: {
-                  contains: term,
-                },
+              username: {
+                contains: term,
               },
             },
             {

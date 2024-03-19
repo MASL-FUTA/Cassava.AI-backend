@@ -149,6 +149,22 @@ export class InventoryService {
           listed: true,
           status: 'pending',
         },
+        select: {
+          name: true,
+          farmer: {
+            select: {
+              username: true,
+              email: true,
+              phone_number: true,
+            },
+          },
+          type: true,
+          unit: true,
+          price: true,
+          id: true,
+          harvestDate: true,
+          quantity: true,
+        },
       });
 
       if (!item) {
@@ -157,11 +173,32 @@ export class InventoryService {
         );
       }
 
+      const market = await this.prisma.market.create({
+        data: {
+          name: item.name,
+          username: item.farmer.username,
+          email: item.farmer.email,
+          phoneNumber: item.farmer.phone_number,
+          type: item.type,
+          unit: item.unit,
+          price: item.price,
+          itemid: item.id,
+          harvestDate: item.harvestDate,
+          quantity: item.quantity,
+        },
+      });
+
+      if (!market) {
+        throw new InternalServerErrorException(
+          'Inventory Item could not be added to market',
+        );
+      }
+
       return {
         message: 'Item has been added to market',
         status: 'success',
         statusCode: 200,
-        data: item,
+        data: market,
       };
     } catch (error) {
       throw error;
@@ -184,6 +221,18 @@ export class InventoryService {
       if (!item) {
         throw new InternalServerErrorException(
           'Item could not be removed from market.',
+        );
+      }
+
+      const market = await this.prisma.market.delete({
+        where: {
+          itemid: id,
+        },
+      });
+
+      if (!market) {
+        throw new InternalServerErrorException(
+          'Item could not be deleted from market',
         );
       }
 

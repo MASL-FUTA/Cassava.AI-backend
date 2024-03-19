@@ -57,7 +57,7 @@ model User {
   email             String      @unique
   firstname         String
   lastname          String
-  username          String
+  username          String      @unique
   phone_number      String
   role              roles       @default(farmer)
   passwordhash      String
@@ -122,4 +122,20 @@ model Inventory {
   unit        inventoryUnit @default(kg)
   listed      Boolean       @default(false)
   status      GenericStatus @default(unlisted)
+}
+
+model Market {
+  id          String        @id @default(auto()) @map("_id") @db.ObjectId
+  name        String
+  itemid      String?       @unique
+  username    String
+  phoneNumber String
+  email       String?       @unique
+  price       Float
+  type        String
+  unit        inventoryUnit @default(kg)
+  status      GenericStatus @default(pending)
+  harvestDate DateTime      @db.Timestamp()
+  quantity    Float
+  listed      Boolean       @default(false)
 }

@@ -78,7 +78,7 @@ export class InventoryController {
     );
   }
 
-  @Get('/:farmid/:inventoryid/add-to-market')
+  @Post('/:farmid/:inventoryid/add-to-market')
   @HttpCode(200)
   @Roles(Role.Farmer, Role.Admin)
   addToMarket(
