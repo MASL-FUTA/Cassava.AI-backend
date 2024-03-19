@@ -1,7 +1,6 @@
 import {
   BadRequestException,
   Injectable,
-  InternalServerErrorException,
 } from '@nestjs/common';
 import axios from 'axios';
 import { ConfigService } from '@nestjs/config';
