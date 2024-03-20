@@ -15,6 +15,41 @@ export class EmailService {
     private mailerService: MailerService,
   ) {}
 
+  // private async sendMail(message: MessageEntity) {
+  //   const POLLER_WAIT_TIME = 10;
+  //   try {
+  //     const poller = await this.emailClient.beginSend(message);
+
+  //     if (!poller.getOperationState().isStarted) {
+  //       throw new InternalServerErrorException('Poller was not Started');
+  //     }
+
+  //     let timeElapsed = 0;
+  //     while (!poller.isDone()) {
+  //       poller.poll();
+  //       console.log('Email send polling in progress');
+
+  //       await new Promise((resolve) =>
+  //         setTimeout(resolve, POLLER_WAIT_TIME * 1000),
+  //       );
+  //       timeElapsed += 10;
+
+  //       if (timeElapsed > 18 * POLLER_WAIT_TIME) {
+  //         throw 'Poller timed out';
+  //       }
+  //     }
+
+  //     if (poller.getResult().status === KnownEmailSendStatus.Succeeded) {
+  //       console.log('Email successful');
+  //     } else {
+  //       throw poller.getResult().error;
+  //     }
+  //   } catch (error) {
+  //     console.error(error);
+  //     throw error;
+  //   }
+  // }
+
   private async sendVerificationEmail(email_data: any) {
     try {
       const { data } = email_data;

@@ -20,6 +20,7 @@
     "test:e2e": "jest --config --watch ./test/jest-e2e.json"
   },
   "dependencies": {
+    "@azure/communication-email": "^1.0.0",
     "@azure/service-bus": "^7.9.3",
     "@google/generative-ai": "^0.2.1",
     "@langchain/community": "^0.0.29",
